@@ -9,8 +9,7 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
-    //private UserDao userDao =
-    //        new UserDaoJDBCImpl(); //для 1
+    //private UserDao userDao = new UserDaoJDBCImpl(); //для 1
 
     private final UserDao userDao =
             new UserDaoHibernateImpl(); //для 2
