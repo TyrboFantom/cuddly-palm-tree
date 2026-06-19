@@ -1,6 +1,8 @@
 package jm.task.core.jdbc.util;
 
-import com.mysql.cj.xdevapi.SessionFactory;
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +19,10 @@ public class Util {
     private static final String PASSWORD =
             "notqwerty10";
 
-    public static Connection getConnection() {
+    private static SessionFactory sessionFactory;
 
+    //это для 1 задачки
+    public static Connection getConnection() {
         try {
             return DriverManager.getConnection(
                     URL,
@@ -29,5 +33,51 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
-    private static SessionFactory sessionFactory;
+
+    // это для Hibernate
+    public static SessionFactory getSessionFactory() {
+
+        if (sessionFactory == null) {
+
+            try {
+
+                Configuration configuration =
+                        new Configuration();
+
+                configuration.setProperty(
+                        "hibernate.connection.driver_class",
+                        "com.mysql.cj.jdbc.Driver");
+
+                configuration.setProperty(
+                        "hibernate.connection.url",
+                        URL);
+
+                configuration.setProperty(
+                        "hibernate.connection.username",
+                        USER);
+
+                configuration.setProperty(
+                        "hibernate.connection.password",
+                        PASSWORD);
+
+                configuration.setProperty(
+                        "hibernate.dialect",
+                        "org.hibernate.dialect.MySQL8Dialect");
+
+                configuration.setProperty(
+                        "hibernate.show_sql",
+                        "true");
+
+                configuration.addAnnotatedClass(User.class);
+
+                sessionFactory =
+                        configuration.buildSessionFactory();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return sessionFactory;
+    }
 }
